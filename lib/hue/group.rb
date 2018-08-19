@@ -102,9 +102,12 @@ module Hue
       JSON(response.body)
     end
 
-    def set_state(attributes)
+    def set_state(attributes, transition = nil)
       return if new?
       body = translate_keys(attributes, STATE_KEYS_MAP)
+
+      # Add transition
+      body.merge!({:transitiontime => transition}) if transition
 
       uri = URI.parse("#{base_url}/action")
       http = Net::HTTP.new(uri.host)
